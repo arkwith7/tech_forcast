@@ -1,0 +1,5 @@
+# 개발 및 품질 관리 도구
+black
+ruff
+mypy
+types-requests

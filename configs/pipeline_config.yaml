@@ -1,0 +1,28 @@
+project:
+  name: tech_forecast_patent_nlp
+  description: 특허 및 논문 텍스트를 활용한 기술 예측 파이프라인 기본 구성
+
+data:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+  patent_file: sample_patents.csv
+  paper_file: sample_papers.jsonl
+
+preprocessing:
+  language: ko
+  remove_stopwords: true
+  lemmatize: true
+  min_token_length: 3
+
+features:
+  embedding_model: sentence-transformers/all-mpnet-base-v2
+  window_size_years: 3
+
+modeling:
+  forecasting_horizon_years: 5
+  evaluation_metric: mean_absolute_error
+
+tracking:
+  experiment_dir: reports/experiments
+  log_level: INFO

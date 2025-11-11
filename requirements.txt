@@ -1,0 +1,30 @@
+# Core data processing
+pandas
+numpy
+scikit-learn
+scipy
+
+# NLP
+nltk
+spacy
+gensim
+transformers
+torch
+tqdm
+python-dotenv
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+# Jupyter environment
+jupyter
+ipykernel
+
+# Patent & document handling
+beautifulsoup4
+lxml
+pdfminer.six
+langdetect
+
