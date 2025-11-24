@@ -1,0 +1,51 @@
+-- ============================================
+-- HBM (High Bandwidth Memory) CODE
+-- ============================================
+
+SET SESSION group_concat_max_len = 1000000;
+
+USE patstat2025s;
+
+-- 1. 기존 테이블이 있다면 삭제 (안전장치)
+DROP TABLE IF EXISTS students.hklee_HBM_Gemini;
+
+-- 2. HBM 전용 테이블 생성
+CREATE TABLE students.hklee_HBM_Gemini AS
+
+SELECT DISTINCT
+"    t1.appln_id,"
+"    t1.appln_auth,             -- 국가 (US, KR, EP...)"
+"    t1.appln_nr,               -- 출원번호"
+"    t1.appln_filing_year,      -- 출원년도"
+"    t2.appln_title,            -- 발명의 명칭"
+    t3.cpc_class_symbol        -- CPC 코드
+FROM
+    tls201_appln t1
+
+JOIN
+    tls202_appln_title t2 ON t1.appln_id = t2.appln_id
+
+JOIN
+    tls224_appln_cpc t3 ON t1.appln_id = t3.appln_id
+WHERE
+    -- 1. [변경] CPC 필터: 메모리(G11C) 및 적층/패키징(H01L)
+    (
+        t3.cpc_class_symbol LIKE 'G11C%'       -- Static Stores (Memory Circuits)
+        OR t3.cpc_class_symbol LIKE 'H01L  25%' -- Assemblies consisting of plural solid state devices (Stacking)
+"        OR t3.cpc_class_symbol LIKE 'H01L  23%' -- Details of semiconductor devices (TSV, Interposer)"
+        OR t3.cpc_class_symbol LIKE 'H01L  24%' -- Packaging (Connections)
+    )
+    
+    AND 
+    
+    -- 2. [변경] 키워드 필터: HBM 관련 핵심 용어
+    (
+        LOWER(t2.appln_title) LIKE '%high bandwidth memory%'
+"        OR LOWER(t2.appln_title) LIKE '%hbm%'        -- HBM, HBM2, HBM3, HBM3E, HBM4 모두 포함"
+        OR LOWER(t2.appln_title) LIKE '%wide i/o memory%'
+        OR LOWER(t2.appln_title) LIKE '%stacked memory die%'
+        OR LOWER(t2.appln_title) LIKE '%memory stack%'
+    )
+    
+ORDER BY
+    t1.appln_filing_year DESC;

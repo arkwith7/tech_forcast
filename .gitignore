@@ -15,7 +15,7 @@ dist/
 .ipynb_checkpoints/
 
 # Data outputs
-/data/raw/*
+# /data/raw/*
 !/data/raw/README.md
 /data/interim/*
 !/data/interim/README.md
