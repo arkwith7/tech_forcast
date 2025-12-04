@@ -183,7 +183,10 @@ def collect_hbm_patents():
     combined_df = pd.concat(all_patents, ignore_index=True)
     
     # 중복 제거
-    combined_df = combined_df.drop_duplicates(subset=['patent_number'], keep='first')
+    if 'patent_number' in combined_df.columns:
+        combined_df = combined_df.drop_duplicates(subset=['patent_number'], keep='first')
+    else:
+        logger.warning("'patent_number' column not found, skipping deduplication")
     
     logger.info(f"Total unique patents: {len(combined_df)}")
     
@@ -216,7 +219,7 @@ def generate_statistics(df: pd.DataFrame, output_dir: Path):
     
     # 연도별 통계
     if 'patent_date' in df.columns:
-        df['year'] = pd.to_datetime(df['patent_date']).dt.year
+        df['year'] = pd.to_datetime(df['patent_date'], errors='coerce').dt.year
         yearly_stats = df.groupby('year')['patent_number'].count().reset_index()
         yearly_stats.columns = ['year', 'patent_count']
         

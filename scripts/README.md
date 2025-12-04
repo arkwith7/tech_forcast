@@ -48,10 +48,14 @@ python scripts/collect_papers.py
 스크립트 실행 전 필요한 라이브러리를 설치하세요:
 
 ```bash
-pip install arxiv requests pandas
+# 특허 수집에 필요 (requests, pandas는 이미 requirements.txt에 포함됨)
+pip install requests pandas
+
+# 논문 수집에 필요 (별도 설치 필요)
+pip install arxiv
 ```
 
-또는 requirements.txt에 추가:
+**참고:** `arxiv` 라이브러리는 현재 requirements.txt에 포함되어 있지 않으므로 별도로 설치해야 합니다. 향후 requirements.txt에 추가할 수 있습니다:
 ```
 arxiv>=2.0.0
 ```

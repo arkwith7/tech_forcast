@@ -149,7 +149,10 @@ def collect_hbm_papers():
     combined_df = pd.concat(all_papers, ignore_index=True)
     
     # 중복 제거 (arxiv_id 기준)
-    combined_df = combined_df.drop_duplicates(subset=['arxiv_id'], keep='first')
+    if 'arxiv_id' in combined_df.columns:
+        combined_df = combined_df.drop_duplicates(subset=['arxiv_id'], keep='first')
+    else:
+        logger.warning("'arxiv_id' column not found, skipping deduplication")
     
     logger.info(f"Total unique papers: {len(combined_df)}")
     
@@ -176,7 +179,7 @@ def generate_statistics(df: pd.DataFrame):
     
     # 연도별 통계
     if 'published' in df.columns:
-        df['year'] = pd.to_datetime(df['published']).dt.year
+        df['year'] = pd.to_datetime(df['published'], errors='coerce').dt.year
         yearly_counts = df['year'].value_counts().sort_index()
         logger.info("\nPapers by year:")
         for year, count in yearly_counts.items():
